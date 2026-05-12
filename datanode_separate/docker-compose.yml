@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  datanode_4:
+    build: ./datanode
+    image: hadoop-datanode
+    container_name: datanode_4
+    restart: always
+
+    ports:
+      - "9864:9864"
+      - "9866:9866"
+
+    volumes:
+      - hadoop_datanode_4:/hadoop/dfs/data
+
+    env_file:
+      - ./hadoop.env
+
+  nodemanager2:
+    build: ./nodemanager
+    image: hadoop-nodemanager
+    container_name: nodemanager2
+    restart: always
+
+    ports:
+      - "8042:8042"
+
+    env_file:
+      - ./hadoop.env
+
+volumes:
+  hadoop_datanode_4:

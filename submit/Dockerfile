@@ -13,7 +13,7 @@ COPY book9.txt /opt/hadoop/book9.txt
 COPY book10.txt /opt/hadoop/book10.txt
 
 ENV JAR_FILEPATH="/opt/hadoop/applications/app.jar"
-ENV CLASS_TO_RUN="WordCounter"
+ENV CLASS_TO_RUN="InverseIndex"
 ENV PARAMS="hdfs:///books /output"
 
 COPY run.sh /run.sh

@@ -70,6 +70,9 @@ services:
     restart: always
     ports:
       - 8088:8088
+      - 8030:8030
+      - 8031:8031
+      - 8032:8032
     environment:
       SERVICE_PRECONDITION: 'namenode:9000 namenode:9870 datanode_1:9864 datanode_2:9864 datanode_3:9864'
     env_file:
