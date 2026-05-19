@@ -43,6 +43,7 @@ cd <project_root>
 sudo ./build.sh
 ```
 ### 2. Start Hadoop cluster
+Modify the datanodes' IP address in docker-compose.yml!
 ```bash
 sudo docker compose up
 ```

@@ -1,5 +1,7 @@
 version: '3'
 
+# replace 192.168.1.180 with your ip address
+
 services:
   namenode:
     build: ./namenode
@@ -23,10 +25,17 @@ services:
     platform: linux/amd64
     container_name: datanode_1
     restart: always
-    volumes:
-      - hadoop_datanode_1:/hadoop/dfs/data
+    ports:
+      - "9864:9864"
+      - "9866:9866"
     environment:
       SERVICE_PRECONDITION: 'namenode:9870'
+      HDFS_CONF_dfs_datanode_hostname: 192.168.1.180
+      HDFS_CONF_dfs_datanode_http_address: 0.0.0.0:9864
+      HDFS_CONF_dfs_datanode_address: 0.0.0.0:9866
+      HDFS_CONF_dfs_datanode_ipc_address: 0.0.0.0:9865
+    volumes:
+      - hadoop_datanode_1:/hadoop/dfs/data
     env_file:
       - ./hadoop.env
     depends_on:
@@ -38,10 +47,17 @@ services:
     platform: linux/amd64
     container_name: datanode_2
     restart: always
-    volumes:
-      - hadoop_datanode_2:/hadoop/dfs/data
+    ports:
+      - "9867:9867"
+      - "9868:9868"
     environment:
       SERVICE_PRECONDITION: 'namenode:9870'
+      HDFS_CONF_dfs_datanode_hostname: 192.168.1.180
+      HDFS_CONF_dfs_datanode_http_address: 0.0.0.0:9867
+      HDFS_CONF_dfs_datanode_address: 0.0.0.0:9868
+      HDFS_CONF_dfs_datanode_ipc_address: 0.0.0.0:9869
+    volumes:
+      - hadoop_datanode_2:/hadoop/dfs/data
     env_file:
       - ./hadoop.env
     depends_on:
@@ -53,10 +69,17 @@ services:
     platform: linux/amd64
     container_name: datanode_3
     restart: always
-    volumes:
-      - hadoop_datanode_3:/hadoop/dfs/data
+    ports:
+      - "9871:9871"
+      - "9872:9872"
     environment:
       SERVICE_PRECONDITION: 'namenode:9870'
+      HDFS_CONF_dfs_datanode_hostname: 192.168.1.180
+      HDFS_CONF_dfs_datanode_http_address: 0.0.0.0:9871
+      HDFS_CONF_dfs_datanode_address: 0.0.0.0:9872
+      HDFS_CONF_dfs_datanode_ipc_address: 0.0.0.0:9873
+    volumes:
+      - hadoop_datanode_3:/hadoop/dfs/data
     env_file:
       - ./hadoop.env
     depends_on:
@@ -74,7 +97,7 @@ services:
       - 8031:8031
       - 8032:8032
     environment:
-      SERVICE_PRECONDITION: 'namenode:9000 namenode:9870 datanode_1:9864 datanode_2:9864 datanode_3:9864'
+      SERVICE_PRECONDITION: 'namenode:9000 namenode:9870 192.168.1.180:9864 192.168.1.180:9868 192.168.1.180:9872'
     env_file:
       - ./hadoop.env
 
@@ -85,7 +108,7 @@ services:
     container_name: nodemanager
     restart: always
     environment:
-      SERVICE_PRECONDITION: 'namenode:9000 namenode:9870 datanode_1:9864 datanode_2:9864 datanode_3:9864 resourcemanager:8088'
+      SERVICE_PRECONDITION: 'namenode:9000 namenode:9870 192.168.1.180:9864 192.168.1.180:9868 192.168.1.180:9872 resourcemanager:8088'
     env_file:
       - ./hadoop.env
 
