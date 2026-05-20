@@ -35,6 +35,46 @@ Make sure scripts are executable before running by using `chmod +x <script>`
     └── download-books.sh   # Script that downloads 10 books (we should change them)
 ```
 
+## App diagram
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     TWO-PHASE INVERTED INDEX                        │
+└─────────────────────────────────────────────────────────────────────┘
+
+  PHASE 1: Line Number Assignment
+  ┌─────────────────┐         ┌──────────────────┐
+  │     MAPPER      │         │     REDUCER      │
+  │                 │         │                  │
+  │ Emit byte       │────────>│ Sort by offset   │
+  │ offset + line   │         │ Assign global    │
+  │ per filename    │         │ line numbers     │
+  └─────────────────┘         └──────────────────┘
+                                        │
+                                        ▼
+                              ┌──────────────────┐
+                              │   TEMP OUTPUT    │
+                              │ "1 file.txt The" │
+                              │ "2 file.txt The" │
+                              │ "3 file.txt Fox" │
+                              └──────────────────┘
+
+  PHASE 2: Inverted Index Building
+  ┌─────────────────┐         ┌──────────────────┐         ┌──────────────────┐
+  │     MAPPER      │         │    COMBINER      │         │     REDUCER      │
+  │                 │         │                  │         │                  │
+  │ Extract words   │────────>│ Merge line nums  │────────>│ Build final      │
+  │ Emit word→line  │         │ per word+file    │         │ inverted index   │
+  └─────────────────┘         └──────────────────┘         └──────────────────┘
+                                        │
+                                        ▼
+                              ┌──────────────────┐
+                              │   FINAL OUTPUT   │
+                              │ fox  (f1, 1, 5)  │
+                              │ dog  (f1, 2, 4)  │
+                              │ lazy (f1, 2, 4)  │
+                              └──────────────────┘
+```
+
 ## Running the app
 
 ### 1. Build all images
